@@ -48,5 +48,5 @@ public class CalculatorTest {
     public void test_ExponentZero() {
         assertEquals(1.0, Main.raiseToPower(5.0, 0.0), 0.0001);
     }
- // changing
+ // comment
 }
