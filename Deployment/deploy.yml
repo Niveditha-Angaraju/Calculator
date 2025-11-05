@@ -1,9 +1,27 @@
-- name: Pull Docker Image of Calculator
+---
+- name: Deploy Calculator Container
   hosts: all
+  become: true     # Ensures Ansible can use Docker (run as root)
+  vars:
+    image_name: "nivedithavarma/calculator:latest"
+    container_name: "Calculator"
 
   tasks:
-    - name: Pull Image
-      shell: docker pull nivedithavarma/calculator:latest
+    - name: Ensure Python Docker SDK is installed
+      ansible.builtin.pip:
+        name: docker
+        state: present
 
-    - name: Run the container
-      shell: docker run -it -d --name Calculator nivedithavarma/calculator
+    - name: Pull latest Calculator image
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Ensure Calculator container is running (idempotent)
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        restart_policy: unless-stopped
+        recreate: true        # Replaces container if image changed
+        detach: true
