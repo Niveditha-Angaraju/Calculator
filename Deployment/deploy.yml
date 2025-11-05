@@ -1,7 +1,7 @@
 ---
 - name: Deploy Calculator Container
   hosts: all
-  become: true     # Ensures Ansible can use Docker (run as root)
+    # Ensures Ansible can use Docker (run as root)
   vars:
     image_name: "nivedithavarma/calculator:latest"
     container_name: "Calculator"
